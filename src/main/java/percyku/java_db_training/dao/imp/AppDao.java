@@ -10,11 +10,15 @@ import java.util.List;
 public interface AppDao {
 
     List<User> findUsers();
+
+    List<User> findUsersWithRole();
     User findUserById(int theId);
     User findUserWithRoleById(int theId);
 
     void save(User theUser);
     void saveAndUpdate(User theUser);
+
+    void createUserWithRole(User theUser);
 
     void saveAndUpdate(UserRole userRole);
 
@@ -30,8 +34,13 @@ public interface AppDao {
 
     void save(Role role);
 
+    void saveAndUpdate(Role role);
+
     List<Role> getRoles();
     Role getRole(String name);
+
+
+    void removeRole(String name);
 
 
 }

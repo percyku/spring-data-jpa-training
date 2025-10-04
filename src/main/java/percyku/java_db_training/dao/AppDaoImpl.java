@@ -11,6 +11,7 @@ import percyku.java_db_training.model.User;
 import percyku.java_db_training.model.UserRole;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -39,6 +40,33 @@ public class AppDaoImpl implements AppDao {
     }
 
     @Override
+    public List<User> findUsersWithRole() {
+        //create query
+        TypedQuery<User> query = entityManager.createQuery(
+                "select distinct u from User u "
+                        +" LEFT JOIN FETCH u.user_role t"
+                        +" LEFT JOIN FETCH t.role"
+//                        +" where u.id = :data"
+                ,User.class);
+
+//        //execute query
+//        User user =null;
+//        try {
+//
+//            user= query.getSingleResult();
+//
+//        } catch (NoResultException e) {
+//            user= entityManager.find(User.class,theId);
+//            if(user!= null){
+//                user.setUser_role(new ArrayList<>());
+//            }
+//        }
+
+
+        return query.getResultList();
+    }
+
+    @Override
     public User findUserById(int theId) {
         return entityManager.find(User.class,theId);
     }
@@ -49,8 +77,9 @@ public class AppDaoImpl implements AppDao {
 
         //create query
         TypedQuery<User> query = entityManager.createQuery(
-                "select u from User u "
-                        +" JOIN FETCH u.user_role"
+                "select distinct u from User u "
+                        +" LEFT JOIN FETCH u.user_role t"
+                        +" LEFT JOIN FETCH t.role"
                         +" where u.id = :data",User.class);
         query.setParameter("data",theId);
         //execute query
@@ -60,10 +89,10 @@ public class AppDaoImpl implements AppDao {
             user= query.getSingleResult();
 
         } catch (NoResultException e) {
-            user= entityManager.find(User.class,theId);
-            if(user!= null){
-                user.setUser_role(new ArrayList<>());
-            }
+//            user= entityManager.find(User.class,theId);
+//            if(user!= null){
+//                user.setUser_role(new ArrayList<>());
+//            }
         }
 
 
@@ -87,16 +116,38 @@ public class AppDaoImpl implements AppDao {
 
     @Transactional
     @Override
-    public void saveAndUpdate(UserRole userRole) {
-        entityManager.merge(userRole);
+    public void createUserWithRole(User theUser) {
+
+        Role defaultRole =getRole("ROLE_DEFAULT");
+
+        UserRole user_role =new UserRole();
+        user_role.setUser(theUser);
+        user_role.setRole(defaultRole);
+        user_role.setCommon("initial create");
+        theUser.addUser_role(user_role);
+        defaultRole.addUser_role(user_role);
+
+        entityManager.merge(theUser);
     }
 
     @Transactional
     @Override
+    public void saveAndUpdate(UserRole userRole) {
+        entityManager.merge(userRole);
+    }
+
+
+    @Transactional
+    @Override
     public void updateUserRole(int theId,List<String> roles) {
+
+
         User user = findUserWithRoleById(theId);
         System.out.println(user);
-        System.out.println(user.getUser_role());
+        if(user.getUser_role()!=null){
+            System.out.println(user.getUser_role());
+        }
+
 
 
         List<Role>roleList=new ArrayList<>();
@@ -123,11 +174,14 @@ public class AppDaoImpl implements AppDao {
             UserRole tmpUserRole= new UserRole();
             tmpUserRole.setRole(role);
             tmpUserRole.setUser(user);
+            tmpUserRole.setCommon("by someone");
             user.addUser_role(tmpUserRole);
         }
 
 
         entityManager.merge(user);
+
+
     }
 
 
@@ -140,15 +194,64 @@ public class AppDaoImpl implements AppDao {
         System.out.println(user.getUser_role());
         List<UserRole> newUserRole =new ArrayList<>();
 
+
+        /*
+
+        if not using orphanRemoval = true like below ,you must control like below logic
+        @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true)
+        private List<UserRole> user_role =new ArrayList<>();
+
+        */
+
+//        for(UserRole userRole: user.getUser_role()){
+//            if(userRole.getRole().getName().equals(roleName)){
+//                entityManager.remove(userRole);
+//
+//            }else{
+//                newUserRole.add(userRole);
+//            }
+//        }
+//        user.setUser_role(newUserRole);
+
+        /*
+        using orphanRemoval = true to control
+         */
+
+//        int i =0;
+//        List<Integer> removeIdx=new ArrayList<>();
+//        for(UserRole userRole: user.getUser_role()){
+//            if(userRole.getRole().getName().equals(roleName)){
+//                removeIdx.add(i);
+//            }
+//            i++;
+//        }
+//
+//        for(int a : removeIdx){
+//            UserRole removeUserRole = user.getUser_role().get(a);
+//            removeUserRole.setUser(null);
+//            user.getUser_role().remove(a);
+//        }
+
+
+        /*
+        using orphanRemoval = true to control
+        using HashSet to control collection
+         */
+        Set<UserRole> removeUserRoles=new HashSet<>();
         for(UserRole userRole: user.getUser_role()){
             if(userRole.getRole().getName().equals(roleName)){
-                entityManager.remove(userRole);
-
-            }else{
-                newUserRole.add(userRole);
+                removeUserRoles.add(userRole);
             }
         }
-        user.setUser_role(newUserRole);
+
+        for(UserRole removeUserRole : removeUserRoles){
+
+            removeUserRole.setUser(null);
+            user.getUser_role().remove(removeUserRole);
+        }
+
+
+
 
 
     }
@@ -159,12 +262,50 @@ public class AppDaoImpl implements AppDao {
 
         User user=  findUserWithRoleById(theId);
         System.out.println(user.getUser_role());
-        for(UserRole userRole : user.getUser_role()){
-            entityManager.remove(userRole);
+
+         /*
+
+        if not using orphanRemoval = true like below ,you must control like below logic
+        @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true)
+        private List<UserRole> user_role =new ArrayList<>();
+
+        */
+
+//        for(UserRole userRole : user.getUser_role()){
+//            entityManager.remove(userRole);
+//        }
+//
+//        user.setUser_role(null);
+////        entityManager.merge(user);
+
+
+
+       /*
+        using orphanRemoval = true to control
+        */
+
+
+//        int len=user.getUser_role().size();
+//        for(int i =0;i< len;i++){
+//
+//            UserRole removeUserRole = user.getUser_role().get(0);
+//            removeUserRole.setUser(null);
+//            user.getUser_role().remove(0);
+//        }
+
+
+
+        /*
+        using orphanRemoval = true to control
+        using HashSet to control collection
+         */
+        for(UserRole removeUserRole : user.getUser_role()){
+            removeUserRole.setUser(null);
+
         }
 
-        user.setUser_role(null);
-//        entityManager.merge(user);
+        user.getUser_role().clear();
+
 
     }
 
@@ -183,6 +324,12 @@ public class AppDaoImpl implements AppDao {
     @Override
     public void save(Role role) {
         entityManager.persist(role);
+    }
+
+    @Transactional
+    @Override
+    public void saveAndUpdate(Role role) {
+        entityManager.merge(role);
     }
 
     @Override
@@ -214,6 +361,15 @@ public class AppDaoImpl implements AppDao {
 
 
         return role;
+    }
+
+
+    @Transactional
+    @Override
+    public void removeRole(String name) {
+        Role removeRole =getRole(name);
+        System.out.println(removeRole);
+        entityManager.remove(removeRole);
     }
 
 
