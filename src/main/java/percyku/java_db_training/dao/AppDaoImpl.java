@@ -34,7 +34,15 @@ public class AppDaoImpl implements AppDao {
                 "select i from User i ",User.class);
 
         //execute query
-        List<User> userList = query.getResultList();
+        List<User> userList =null;
+        try {
+
+            userList= query.getResultList();
+
+        } catch (NoResultException e) {
+            userList=new ArrayList<>();
+        }
+
 
         return userList;
     }
@@ -49,21 +57,17 @@ public class AppDaoImpl implements AppDao {
 //                        +" where u.id = :data"
                 ,User.class);
 
-//        //execute query
-//        User user =null;
-//        try {
-//
-//            user= query.getSingleResult();
-//
-//        } catch (NoResultException e) {
-//            user= entityManager.find(User.class,theId);
-//            if(user!= null){
-//                user.setUser_role(new ArrayList<>());
-//            }
-//        }
+        List<User> userList =null;
+        try {
+
+            userList= query.getResultList();
+
+        } catch (NoResultException e) {
+            userList=new ArrayList<>();
+        }
 
 
-        return query.getResultList();
+        return userList;
     }
 
     @Override
@@ -82,17 +86,14 @@ public class AppDaoImpl implements AppDao {
                         +" LEFT JOIN FETCH t.role"
                         +" where u.id = :data",User.class);
         query.setParameter("data",theId);
-        //execute query
+
         User user =null;
         try {
 
             user= query.getSingleResult();
 
         } catch (NoResultException e) {
-//            user= entityManager.find(User.class,theId);
-//            if(user!= null){
-//                user.setUser_role(new ArrayList<>());
-//            }
+            user=new User();
         }
 
 
@@ -130,12 +131,6 @@ public class AppDaoImpl implements AppDao {
         entityManager.merge(theUser);
     }
 
-    @Transactional
-    @Override
-    public void saveAndUpdate(UserRole userRole) {
-        entityManager.merge(userRole);
-    }
-
 
     @Transactional
     @Override
@@ -143,11 +138,8 @@ public class AppDaoImpl implements AppDao {
 
 
         User user = findUserWithRoleById(theId);
-        System.out.println(user);
-        if(user.getUser_role()!=null){
-            System.out.println(user.getUser_role());
-        }
-
+//        System.out.println(user);
+//        System.out.println(user.getUser_role());
 
 
         List<Role>roleList=new ArrayList<>();
@@ -165,7 +157,7 @@ public class AppDaoImpl implements AppDao {
                 continue;
             else{
                 Role printRole=getRole(roleName);
-                System.out.println(printRole);
+//                System.out.println(printRole);
                 roleList.add(printRole);
             }
         }
@@ -190,9 +182,9 @@ public class AppDaoImpl implements AppDao {
     @Override
     public void removeUserRole(int theId, String roleName) {
         User user = findUserWithRoleById(theId);
-        System.out.println(user);
-        System.out.println(user.getUser_role());
-        List<UserRole> newUserRole =new ArrayList<>();
+//        System.out.println(user);
+//        System.out.println(user.getUser_role());
+
 
 
         /*
@@ -202,7 +194,7 @@ public class AppDaoImpl implements AppDao {
         private List<UserRole> user_role =new ArrayList<>();
 
         */
-
+//        List<UserRole> newUserRole =new ArrayList<>();
 //        for(UserRole userRole: user.getUser_role()){
 //            if(userRole.getRole().getName().equals(roleName)){
 //                entityManager.remove(userRole);
@@ -261,7 +253,7 @@ public class AppDaoImpl implements AppDao {
     public void removeUserAllRole(int theId) {
 
         User user=  findUserWithRoleById(theId);
-        System.out.println(user.getUser_role());
+//        System.out.println(user.getUser_role());
 
          /*
 
@@ -338,7 +330,16 @@ public class AppDaoImpl implements AppDao {
                 "select r from Role r ",Role.class);
 
         //execute query
-        List<Role> roleList = query.getResultList();
+        List<Role> roleList=null;
+
+        try {
+            roleList = query.getResultList();
+
+        } catch (NoResultException e) {
+            roleList=new ArrayList<>();
+        }
+
+
 
         return roleList;
     }
@@ -352,13 +353,10 @@ public class AppDaoImpl implements AppDao {
         //execute query
         Role role =null;
         try {
-
             role= query.getSingleResult();
-
         } catch (NoResultException e) {
             return new Role();
         }
-
 
         return role;
     }
@@ -368,7 +366,7 @@ public class AppDaoImpl implements AppDao {
     @Override
     public void removeRole(String name) {
         Role removeRole =getRole(name);
-        System.out.println(removeRole);
+//        System.out.println(removeRole);
         entityManager.remove(removeRole);
     }
 

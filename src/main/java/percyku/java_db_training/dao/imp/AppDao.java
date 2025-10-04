@@ -17,18 +17,13 @@ public interface AppDao {
 
     void save(User theUser);
     void saveAndUpdate(User theUser);
-
     void createUserWithRole(User theUser);
 
-    void saveAndUpdate(UserRole userRole);
-
     void updateUserRole(int theId,List<String> roles);
-
 
     void removeUserRole(int theId,String roleName);
 
     void removeUserAllRole(int theId);
-
 
     void removeUser(int theId);
 
@@ -37,8 +32,8 @@ public interface AppDao {
     void saveAndUpdate(Role role);
 
     List<Role> getRoles();
-    Role getRole(String name);
 
+    Role getRole(String name);
 
     void removeRole(String name);
 

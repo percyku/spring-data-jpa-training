@@ -9,11 +9,9 @@ import percyku.java_db_training.dao.AppDaoRepository;
 import percyku.java_db_training.dao.imp.AppDao;
 import percyku.java_db_training.model.Role;
 import percyku.java_db_training.model.User;
-import percyku.java_db_training.model.UserRole;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @SpringBootApplication
 public class JavaDbTrainingApplication {
@@ -32,7 +30,7 @@ public class JavaDbTrainingApplication {
 		return runner->{
 			System.out.println("Hi");
 			/*
-			This Jpa/Hibernate testing section Start
+				This Jpa/Hibernate testing section Start
 			 */
 //			createUser(20);
 //			createUserWithRole(21);
@@ -65,7 +63,7 @@ public class JavaDbTrainingApplication {
 //			removeRole("ROLE_DEFAULT");
 
 			/*
-			This Jpa/Hibernate testing section End
+				This Jpa/Hibernate testing section End
 			 */
 
 
