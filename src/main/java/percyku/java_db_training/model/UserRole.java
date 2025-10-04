@@ -11,6 +11,9 @@ public class UserRole {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "common")
+    private String common;
+
 //    @ManyToOne
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "user_id")
@@ -20,6 +23,7 @@ public class UserRole {
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "role_id")
     private Role role;
+
 
 
 
@@ -53,7 +57,15 @@ public class UserRole {
         this.role = role;
     }
 
-//    public int getUser_id() {
+    public String getCommon() {
+        return common;
+    }
+
+    public void setCommon(String common) {
+        this.common = common;
+    }
+
+    //    public int getUser_id() {
 //        return user_id;
 //    }
 //
@@ -74,6 +86,7 @@ public class UserRole {
     public String toString() {
         return "UserRole{" +
                 "id=" + id +
+                "common=" + common +
                 ", user=" + user +
                 ", role=" + role +
                 '}';
