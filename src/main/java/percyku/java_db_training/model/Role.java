@@ -3,7 +3,9 @@ package percyku.java_db_training.model;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "role")
@@ -17,8 +19,8 @@ public class Role {
     private String name;
 
 
-    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
-    private List<UserRole> user_role  =new ArrayList<>();;
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL,orphanRemoval = true)
+    private Set<UserRole> user_role  =new HashSet<>();;
 
     public Role() {
     }
@@ -49,9 +51,21 @@ public class Role {
         this.name = name;
     }
 
+
+    public Set<UserRole> getUser_role() {
+        return user_role;
+    }
+
+    public void setUser_role(Set<UserRole> user_role) {
+        this.user_role = user_role;
+    }
+
+
+
     public void addUser_role(UserRole userRole){
         if(user_role== null){
-            user_role=new ArrayList<>();
+//            user_role=new ArrayList<>();
+            user_role=new HashSet<>();
         }
 
         user_role.add(userRole);
