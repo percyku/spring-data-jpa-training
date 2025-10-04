@@ -31,35 +31,42 @@ public class JavaDbTrainingApplication {
 	public CommandLineRunner commandLineRunner() {
 		return runner->{
 			System.out.println("Hi");
-
-//			createUser(1);
-//			createUserWithRole(9);
+			/*
+			This Jpa/Hibernate testing section Start
+			 */
+//			createUser(20);
+//			createUserWithRole(21);
 
 //			findUsers();
-//			findUserById(1);
-//			findUserWithRoleById(3);
+//			findUserWithRole();
+//			findUserWithRoleById(1);
 
 
 
+//			updateUser(4);
+//			updateUserRole(4);
 
 
-
-//			updateUser(7);
-//			updateUserRole(1);
-
-//			removeUserRole(1);
-//			removeUserAllRole(4);
-//			removeUser(8);
+//			removeUserRole(4);
+//			removeUserAllRole(5);
+//			removeUser(4);
 
 //			createRole("ROLE_STUDENT");
 //			createRole("ROLE_TEACHER");
 //			createRole("ROLE_DEFAULT");
 //			createRole("ROLE_ADMIN");
+//			createRole("ROLE_TEST1");
 
 //			getRoles();
 //			getRole("ROLE_STUDENT");
 
+//			updateRoleName("ROLE_TEST1","ROLE_TEST");
 
+//			removeRole("ROLE_DEFAULT");
+
+			/*
+			This Jpa/Hibernate testing section End
+			 */
 
 
 		};
@@ -69,25 +76,26 @@ public class JavaDbTrainingApplication {
 	private void findUsers() {
 		System.out.println("All User:");
 		List<User> userList  = appDao.findUsers();
-		for(User tmpUser : userList){
+		for(User tmpUser : userList) {
 			System.out.println(tmpUser.toString());
 		}
 	}
 
-	private void findUserById(int theId) {
-		System.out.println("Finding User id: "+theId);
-
-		User user =appDao.findUserById(theId);
-		System.out.println("tempUser: " + user);
-
+	private void findUserWithRole() {
+		System.out.println("All User:");
+		List<User> userList  = appDao.findUsersWithRole();
+		for(User tmpUser : userList){
+			System.out.println("========tempUser: " + tmpUser.toString());
+			System.out.println(tmpUser.getUser_role().toString());
+		}
 	}
 
 	private void findUserWithRoleById(int theId) {
 		System.out.println("Finding User id: "+theId);
 
 		User user =appDao.findUserWithRoleById(theId);
-		System.out.println("tempUser: " + user);
-		System.out.println(user.getUser_role());
+		System.out.println("========tempUser: " + user);
+		System.out.println(user.getUser_role().toString());
 	}
 
 
@@ -100,18 +108,14 @@ public class JavaDbTrainingApplication {
 	}
 
 	private void createUserWithRole(int theId){
-		User user= new User("test"+theId,"test"+theId,"test"+theId+"@gmail.com","","");
-		Role roleStudent =new Role(((long) 3),"ROLE_DEFAULT");
+		User theUser= new User("test"+theId,"test"+theId,"test"+theId+"@gmail.com","","");
 
-		UserRole user_role =new UserRole();
-		user_role.setUser(user);
-		user_role.setRole(roleStudent);
-		user.addUser_role(user_role);
-		roleStudent.addUser_role(user_role);
 
-		appDao.saveAndUpdate(user);
 
-		System.out.println(user_role);
+
+		appDao.createUserWithRole(theUser);
+
+		System.out.println(theUser);
 
 	}
 
@@ -128,14 +132,15 @@ public class JavaDbTrainingApplication {
 	private void updateUserRole(int theId){
 		List<String> roles=new ArrayList<>();
 		roles.add("ROLE_STUDENT");
-		roles.add("ROLE_Teacher");
+		roles.add("ROLE_TEACHER");
+		roles.add("ROLE_DEFAULT");
+//		roles.add("ROLE_TEST");
 		appDao.updateUserRole(theId,roles);
 	}
 
 	private void removeUserRole(int theId){
 		appDao.removeUserRole(theId,"ROLE_TEACHER");
 	}
-
 	private void removeUserAllRole(int theId){
 
 		appDao.removeUserAllRole(theId);
@@ -160,6 +165,18 @@ public class JavaDbTrainingApplication {
 		System.out.println(appDao.getRole(name));
 	}
 
+
+	private void updateRoleName(String beforeName,String afterName){
+
+		Role updateRole=appDao.getRole(beforeName);
+		updateRole.setName(afterName);
+
+		appDao.saveAndUpdate(updateRole);
+	}
+
+	private void removeRole(String name){
+		appDao.removeRole(name);
+	}
 
 
 }
