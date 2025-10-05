@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import percyku.java_db_training.dao.imp.AppDao;
 import percyku.java_db_training.model.Role;
 import percyku.java_db_training.model.User;
+import percyku.java_db_training.model.UserDetail;
 import percyku.java_db_training.model.UserRole;
 
 import java.util.ArrayList;
@@ -31,7 +32,9 @@ public class AppDaoImpl implements AppDao {
 
 
         TypedQuery<User> query =entityManager.createQuery(
-                "select i from User i ",User.class);
+                "select u from User u "
+                        +" LEFT JOIN FETCH u.userDetail d"
+                ,User.class);
 
         //execute query
         List<User> userList =null;
@@ -52,6 +55,7 @@ public class AppDaoImpl implements AppDao {
         //create query
         TypedQuery<User> query = entityManager.createQuery(
                 "select distinct u from User u "
+                        +" LEFT JOIN FETCH u.userDetail d"
                         +" LEFT JOIN FETCH u.user_role t"
                         +" LEFT JOIN FETCH t.role"
 //                        +" where u.id = :data"
@@ -82,9 +86,62 @@ public class AppDaoImpl implements AppDao {
         //create query
         TypedQuery<User> query = entityManager.createQuery(
                 "select distinct u from User u "
+                        +" LEFT JOIN FETCH u.userDetail d"
                         +" LEFT JOIN FETCH u.user_role t"
                         +" LEFT JOIN FETCH t.role"
                         +" where u.id = :data",User.class);
+        query.setParameter("data",theId);
+
+        User user =null;
+        try {
+
+            user= query.getSingleResult();
+
+        } catch (NoResultException e) {
+            user=new User();
+        }
+
+
+        return user;
+
+    }
+
+    @Override
+    public List<User> findUserWithDetailAndRole() {
+        //create query
+        TypedQuery<User> query = entityManager.createQuery(
+                "select distinct u from User u "
+                        +" LEFT JOIN FETCH u.userDetail d"
+                        +" LEFT JOIN FETCH u.user_role t"
+                        +" LEFT JOIN FETCH t.role"
+//                        +" where u.id = :data"
+                ,User.class);
+//        query.setParameter("data",theId);
+
+        List<User>  userList =null;
+        try {
+
+            userList= query.getResultList();
+
+        } catch (NoResultException e) {
+            userList=new ArrayList<>();
+        }
+
+
+        return userList;
+
+    }
+
+    @Override
+    public User findUserWithDetailAndRoleById(int theId) {
+        //create query
+        TypedQuery<User> query = entityManager.createQuery(
+                "select distinct u from User u "
+                        +" LEFT JOIN FETCH u.userDetail d"
+                        +" LEFT JOIN FETCH u.user_role t"
+                        +" LEFT JOIN FETCH t.role"
+                        +" where u.id = :data"
+                ,User.class);
         query.setParameter("data",theId);
 
         User user =null;
@@ -137,7 +194,7 @@ public class AppDaoImpl implements AppDao {
     public void updateUserRole(int theId,List<String> roles) {
 
 
-        User user = findUserWithRoleById(theId);
+        User user = findUserWithDetailAndRoleById(theId);
 //        System.out.println(user);
 //        System.out.println(user.getUser_role());
 
@@ -189,7 +246,7 @@ public class AppDaoImpl implements AppDao {
 
         /*
 
-        if not using orphanRemoval = true like below ,you must control like below logic
+        if not using orphanRemoval = true like below ,you must control like below logic in User.class
         @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true)
         private List<UserRole> user_role =new ArrayList<>();
 
@@ -257,7 +314,7 @@ public class AppDaoImpl implements AppDao {
 
          /*
 
-        if not using orphanRemoval = true like below ,you must control like below logic
+        if not using orphanRemoval = true like below ,you must control like below logic in User.class
         @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true)
         private List<UserRole> user_role =new ArrayList<>();
 
@@ -301,12 +358,37 @@ public class AppDaoImpl implements AppDao {
 
     }
 
+    @Transactional
+    @Override
+    public void removeUserDetail(int theId) {
+        User user = entityManager.find(User.class,theId);
+
+//        System.out.println(user);
+//        System.out.println(user.getUserDetail());
+
+        UserDetail removeDetail = user.getUserDetail();
+
+        if(removeDetail!=null){
+            removeDetail.setUser(null);
+            user.setUserDetail(null);
+        }
+
+
+        /*
+        if not using orphanRemoval = true like below ,you must control like below logic in User.class
+        @OneToOne(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true)
+        private UserDetail userDetail;
+        */
+//        entityManager.remove(removeDetail)
+
+    }
 
 
     @Transactional
     @Override
     public void removeUser(int theId) {
-        User user = entityManager.find(User.class,theId);
+//        User user = entityManager.find(User.class,theId);
+        User user = findUserWithDetailAndRoleById(theId);
         entityManager.remove(user);
     }
 

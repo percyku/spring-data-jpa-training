@@ -14,7 +14,8 @@ public interface AppDao {
     List<User> findUsersWithRole();
     User findUserById(int theId);
     User findUserWithRoleById(int theId);
-
+    List<User>  findUserWithDetailAndRole();
+    User findUserWithDetailAndRoleById(int theId);
     void save(User theUser);
     void saveAndUpdate(User theUser);
     void createUserWithRole(User theUser);
@@ -25,6 +26,7 @@ public interface AppDao {
 
     void removeUserAllRole(int theId);
 
+    void  removeUserDetail(int theId);
     void removeUser(int theId);
 
     void save(Role role);
