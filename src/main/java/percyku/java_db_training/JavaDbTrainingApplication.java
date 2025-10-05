@@ -9,6 +9,7 @@ import percyku.java_db_training.dao.AppDaoRepository;
 import percyku.java_db_training.dao.imp.AppDao;
 import percyku.java_db_training.model.Role;
 import percyku.java_db_training.model.User;
+import percyku.java_db_training.model.UserDetail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,22 +33,30 @@ public class JavaDbTrainingApplication {
 			/*
 				This Jpa/Hibernate testing section Start
 			 */
-//			createUser(20);
+//			createUser(30);
+//			createUserWithDetail(31);
 //			createUserWithRole(21);
+//			createUserWithDetailAndRole(33);
 
+//			findUserById(33);
 //			findUsers();
 //			findUserWithRole();
 //			findUserWithRoleById(1);
 
+//			findUserWithDetailAndRole();
+//			findUserWithDetailAndRoleById(312);
 
 
-//			updateUser(4);
-//			updateUserRole(4);
+
+//			updateUser(32);
+//			updateUserDetail(29);
+//			updateUserRole(29);
 
 
-//			removeUserRole(4);
-//			removeUserAllRole(5);
-//			removeUser(4);
+//			removeUserRole(29);
+//			removeUserAllRole(29);
+//			removeUserDetail(29);
+//			removeUser(33);
 
 //			createRole("ROLE_STUDENT");
 //			createRole("ROLE_TEACHER");
@@ -70,12 +79,19 @@ public class JavaDbTrainingApplication {
 		};
 	}
 
+	private void findUserById(int theId){
+		System.out.println("theId:"+theId);
+		User user =  appDao.findUserById(theId);
+		System.out.println(user);
+		System.out.println(user.getUserDetail());
+	}
 
 	private void findUsers() {
 		System.out.println("All User:");
 		List<User> userList  = appDao.findUsers();
 		for(User tmpUser : userList) {
 			System.out.println(tmpUser.toString());
+			System.out.println(tmpUser.getUserDetail());
 		}
 	}
 
@@ -84,6 +100,7 @@ public class JavaDbTrainingApplication {
 		List<User> userList  = appDao.findUsersWithRole();
 		for(User tmpUser : userList){
 			System.out.println("========tempUser: " + tmpUser.toString());
+			System.out.println( tmpUser.getUserDetail());
 			System.out.println(tmpUser.getUser_role().toString());
 		}
 	}
@@ -96,6 +113,26 @@ public class JavaDbTrainingApplication {
 		System.out.println(user.getUser_role().toString());
 	}
 
+	private void findUserWithDetailAndRole() {
+		System.out.println("Finding All User id:");
+
+		List<User> userList  =appDao.findUserWithDetailAndRole();
+		for(User user : userList) {
+			System.out.println("========tempUser: " + user);
+			System.out.println(user.getUserDetail());
+			System.out.println(user.getUser_role());
+		}
+	}
+
+	private void findUserWithDetailAndRoleById(int theId) {
+		System.out.println("Finding User id: "+theId);
+
+		User user =appDao.findUserWithDetailAndRoleById(theId);
+		System.out.println("========tempUser: " + user);
+		System.out.println(user.getUserDetail());
+		System.out.println(user.getUser_role());
+	}
+
 
 
 	private void createUser(int theId){
@@ -105,11 +142,21 @@ public class JavaDbTrainingApplication {
 
 	}
 
+	private void createUserWithDetail(int theId){
+		User user= new User("test"+theId,"test"+theId,"test"+theId+"@gmail.com","","");
+		UserDetail userDetail =new UserDetail("Hi","Java en");
+		user.setUserDetail(userDetail);
+		userDetail.setUser(user);
+		appDao.save(user);
+		System.out.println(user);
+		System.out.println(user.getUserDetail());
+
+	}
+
+
+
 	private void createUserWithRole(int theId){
 		User theUser= new User("test"+theId,"test"+theId,"test"+theId+"@gmail.com","","");
-
-
-
 
 		appDao.createUserWithRole(theUser);
 
@@ -117,13 +164,45 @@ public class JavaDbTrainingApplication {
 
 	}
 
+
+	private void createUserWithDetailAndRole(int theId){
+		User user= new User("test"+theId,"test"+theId,"test"+theId+"@gmail.com","","");
+		UserDetail userDetail =new UserDetail("Hi","Java en");
+		user.setUserDetail(userDetail);
+		userDetail.setUser(user);
+		appDao.createUserWithRole(user);
+
+		System.out.println(user);
+		System.out.println(user.getUserDetail());
+	}
+
 	private void updateUser(int theId){
-		User user =appDao.findUserById(theId);
-		user.setUserName("test"+theId);
+//		User user =appDao.findUserById(theId);
+		User user =appDao.findUserWithDetailAndRoleById(theId);
+		user.setUserName("test_remove"+theId);
 		user.setFirstName("test"+theId);
 		user.setLastName("test"+theId);
 		user.setEmail("test"+theId+"@gmail.com");
 		appDao.saveAndUpdate(user);
+
+	}
+
+	private void updateUserDetail(int theId){
+//		User user =appDao.findUserById(theId);
+		User user =appDao.findUserWithDetailAndRoleById(theId);
+		System.out.println("theUser:"+user);
+		System.out.println("theUserDetail:"+user.getUserDetail());
+		if(user.getUserDetail()!=null){
+			user.getUserDetail().setDesc("Hello");
+
+		}else{
+			UserDetail userDetail =new UserDetail("","");
+			userDetail.setUser(user);
+			user.setUserDetail(userDetail);
+		}
+		appDao.saveAndUpdate(user);
+
+
 
 	}
 
@@ -142,6 +221,10 @@ public class JavaDbTrainingApplication {
 	private void removeUserAllRole(int theId){
 
 		appDao.removeUserAllRole(theId);
+	}
+
+	private void removeUserDetail(int theId){
+		appDao.removeUserDetail(theId);
 	}
 
 

@@ -30,6 +30,9 @@ public class User {
     @Column(name = "email")
     private String email;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true)
+    private UserDetail userDetail;
+
 
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,orphanRemoval = true)
@@ -108,6 +111,14 @@ public class User {
         this.email = email;
     }
 
+    public UserDetail getUserDetail() {
+        return userDetail;
+    }
+
+    public void setUserDetail(UserDetail userDetail) {
+        this.userDetail = userDetail;
+    }
+
     public Set<UserRole> getUser_role() {
         return user_role;
     }
@@ -134,7 +145,8 @@ public class User {
                 ", password='" + password + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
+                ", email='" + email + '\'' +//
+//                ", userDetail='" + userDetail.toString() + '\'' +
 //                ", user_role=" + user_role +
                 '}';
     }
