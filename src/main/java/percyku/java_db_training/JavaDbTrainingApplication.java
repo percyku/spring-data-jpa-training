@@ -5,14 +5,19 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.transaction.annotation.Transactional;
 import percyku.java_db_training.dao.AppDaoRepository;
+import percyku.java_db_training.dao.RoleRepository;
+import percyku.java_db_training.dao.UserRepository;
+import percyku.java_db_training.dao.UserRoleRepository;
 import percyku.java_db_training.dao.imp.AppDao;
 import percyku.java_db_training.model.Role;
 import percyku.java_db_training.model.User;
 import percyku.java_db_training.model.UserDetail;
+import percyku.java_db_training.model.UserRole;
+import percyku.java_db_training.service.UserService;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @SpringBootApplication
 public class JavaDbTrainingApplication {
@@ -25,6 +30,16 @@ public class JavaDbTrainingApplication {
 	AppDao appDao;
 	@Autowired
 	AppDaoRepository appDaoRepository;
+
+	@Autowired
+	UserRepository userRepository;
+	@Autowired
+	RoleRepository roleRepository;
+	@Autowired
+	UserRoleRepository userRoleRepository;
+
+	@Autowired
+	UserService userService;
 
 	@Bean
 	public CommandLineRunner commandLineRunner() {
@@ -50,7 +65,7 @@ public class JavaDbTrainingApplication {
 
 //			updateUser(32);
 //			updateUserDetail(29);
-//			updateUserRole(29);
+//			updateUserRole(17);
 
 
 //			removeUserRole(29);
@@ -76,8 +91,59 @@ public class JavaDbTrainingApplication {
 			 */
 
 
+
+
+			/*
+				This Spring Data JPA testing section Start
+			 */
+
+
+//			System.out.println(userRepository.findUserWithRoleByIdAndRoleName(30,"ROLE_DEFAULT"));
+//			System.out.println(userRepository.findByEmail("test30@gmail.com"));
+
+//			userRepository.save(new User("test_4","test","test","test","test"));
+//			userService.createUserWithDetailAndRole(2);
+//			System.out.println(userService.updateUserInfo(3,new User("test_2","test2","test2","test2","test2"){{
+//				setUserDetail(new UserDetail("engineer","JAVA"));
+////				setUserDetail(null);
+//			}}));
+
+
+
+//			userService.updateUserRole(4,new ArrayList<String>(){{
+//				add("ROLE_STUDENT");
+//				add("ROLE_TEACHER");
+//				add("ROLE_DEFAULT");
+//				add("ROLE_ADMIN");
+//			}});
+
+//			userService.deleteUser(3);
+
+//			userService.removeUserRole(49,"ROLE_STUDENT");
+//			userService.removeUserAllRole(46);
+
+
+//			System.out.println(roleRepository.findByName("ROLE_TEACHER"));
+//			roleRepository.save(new Role("ROLE_DEFAULT"));
+//			roleRepository.save(new Role("ROLE_STUDENT"));
+//			roleRepository.save(new Role("ROLE_TEACHER"));
+//			roleRepository.save(new Role("ROLE_ADMIN"));
+
+//			userService.updateRoleName("ROLE_ADMIN_DELETE","ROLE_ADMIN");
+
+//			userService.deleteRole("ROLE_STUDENT");
+//			userService.deleteAllRole();
+
+
+
+			/*
+				This Spring Data JPA testing section end
+			 */
+
+
 		};
 	}
+
 
 	private void findUserById(int theId){
 		System.out.println("theId:"+theId);
