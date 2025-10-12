@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import percyku.java_db_training.dao.RoleRepository;
 import percyku.java_db_training.dao.UserRepository;
 import percyku.java_db_training.dao.UserRoleRepository;
-import percyku.java_db_training.dao.imp.AppDao;
+import percyku.java_db_training.dao.AppDao;
 import percyku.java_db_training.model.Role;
 import percyku.java_db_training.model.User;
 import percyku.java_db_training.model.UserDetail;

@@ -1,11 +1,11 @@
-package percyku.java_db_training.dao;
+package percyku.java_db_training.dao.imp;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import percyku.java_db_training.dao.imp.AppDao;
+import percyku.java_db_training.dao.AppDao;
 import percyku.java_db_training.model.Role;
 import percyku.java_db_training.model.User;
 import percyku.java_db_training.model.UserDetail;

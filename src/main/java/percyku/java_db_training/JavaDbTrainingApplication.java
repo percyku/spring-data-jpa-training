@@ -5,16 +5,13 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.transaction.annotation.Transactional;
-import percyku.java_db_training.dao.AppDaoRepository;
 import percyku.java_db_training.dao.RoleRepository;
 import percyku.java_db_training.dao.UserRepository;
 import percyku.java_db_training.dao.UserRoleRepository;
-import percyku.java_db_training.dao.imp.AppDao;
+import percyku.java_db_training.dao.AppDao;
 import percyku.java_db_training.model.Role;
 import percyku.java_db_training.model.User;
 import percyku.java_db_training.model.UserDetail;
-import percyku.java_db_training.model.UserRole;
 import percyku.java_db_training.service.UserService;
 
 import java.util.*;
@@ -28,8 +25,7 @@ public class JavaDbTrainingApplication {
 
 	@Autowired
 	AppDao appDao;
-	@Autowired
-	AppDaoRepository appDaoRepository;
+
 
 	@Autowired
 	UserRepository userRepository;
@@ -53,7 +49,7 @@ public class JavaDbTrainingApplication {
 //			createUserWithRole(21);
 //			createUserWithDetailAndRole(33);
 
-//			findUserById(33);
+//			findUserById(2);
 //			findUsers();
 //			findUserWithRole();
 //			findUserWithRoleById(1);
@@ -110,7 +106,7 @@ public class JavaDbTrainingApplication {
 
 
 
-//			userService.updateUserRole(4,new ArrayList<String>(){{
+//			userService.updateUserRole(6,new ArrayList<String>(){{
 //				add("ROLE_STUDENT");
 //				add("ROLE_TEACHER");
 //				add("ROLE_DEFAULT");

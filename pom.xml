@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>percyku</groupId>
-	<artifactId>java-db-training</artifactId>
+	<artifactId>spring-data-jpa-training</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>java-db-training</name>
-	<description>Spring DB project for Spring Boot</description>
+	<name>spring-data-jpa-training</name>
+	<description>Spring Data JPA project for Spring Boot</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -30,10 +30,6 @@
 		<java.version>17</java.version>
 	</properties>
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jdbc</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>

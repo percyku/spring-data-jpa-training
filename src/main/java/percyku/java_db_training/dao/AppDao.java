@@ -1,4 +1,4 @@
-package percyku.java_db_training.dao.imp;
+package percyku.java_db_training.dao;
 
 
 import percyku.java_db_training.model.Role;
